@@ -10,6 +10,13 @@ import (
 
 func Connect() (*sql.DB, error) {
 	// Capture connection properties.
+
+	fmt.Println(os.Getenv("DATABASE_USERNAME"))
+	fmt.Println(os.Getenv("DATABASE_PASSWORD"))
+	fmt.Println(os.Getenv("DATABASE_NET"))
+	fmt.Println(os.Getenv("DATABASE_HOST"))
+	fmt.Println(os.Getenv("DATABASE_NAME"))
+
 	cfg := mysql.Config{
 		User:                 os.Getenv("DATABASE_USERNAME"),
 		Passwd:               os.Getenv("DATABASE_PASSWORD"),
@@ -18,11 +25,12 @@ func Connect() (*sql.DB, error) {
 		DBName:               os.Getenv("DATABASE_NAME"),
 		AllowNativePasswords: true,
 	}
-	fmt.Println("os.Getenv(\"DATABASE_USERNAME\") ----> ", os.Getenv("DATABASE_USERNAME"))
+	//fmt.Println("os.Getenv(\"DATABASE_USERNAME\") ----> ", os.Getenv("DATABASE_USERNAME"))
 	// Get a database handle.
 	var err error
 	db, err := sql.Open("mysql", cfg.FormatDSN())
 	if err != nil {
+		fmt.Println(":( NOT Connected!")
 		log.Fatal(err)
 	}
 
