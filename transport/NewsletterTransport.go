@@ -1,6 +1,7 @@
 package transport
 
 import (
+	"fmt"
 	"github.com/labstack/echo/v4"
 	"net/http"
 	"newsletter-backend/types"
@@ -19,11 +20,22 @@ func NewNewsletterTransport(usecase usecases.NewsletterUseCase) *NewsletterTrans
 	return &NewsletterTransport{usecase: usecase}
 }
 
+func (nt *NewsletterTransport) GetListNewsletterEmails(c echo.Context) error {
+	response := types.HTTPResponse{Success: true, Response: ""}
+	newsletterEmails, err := nt.usecase.GetNewsletterEmails()
+	if err != nil {
+		response.Success = false
+		response.Response = err.Error()
+		return c.JSON(http.StatusBadRequest, response)
+	}
+	response.Response = newsletterEmails
+	return c.JSON(http.StatusOK, response)
+}
+
 func (nt *NewsletterTransport) SuscribeNewsletter(c echo.Context) error {
 
 	response := types.HTTPResponse{Success: true, Response: ""}
-	return c.JSON(http.StatusOK, response)
-	/*newEmail := EmailBody{}
+	newEmail := EmailBody{}
 	if err := c.Bind(&newEmail); err != nil {
 		response.Success = false
 		response.Response = "Email is missing in the request"
@@ -36,5 +48,5 @@ func (nt *NewsletterTransport) SuscribeNewsletter(c echo.Context) error {
 		response.Success = false
 		response.Response = err.Error()
 	}
-	return c.JSON(http.StatusOK, response)*/
+	return c.JSON(http.StatusOK, response)
 }

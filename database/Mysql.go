@@ -5,28 +5,28 @@ import (
 	"fmt"
 	"github.com/go-sql-driver/mysql"
 	"log"
+	"newsletter-backend/types"
 	"os"
 )
 
 func Connect() (*sql.DB, error) {
-	// Capture connection properties.
-
-	fmt.Println(os.Getenv("DATABASE_USERNAME"))
-	fmt.Println(os.Getenv("DATABASE_PASSWORD"))
-	fmt.Println(os.Getenv("DATABASE_NET"))
-	fmt.Println(os.Getenv("DATABASE_HOST"))
-	fmt.Println(os.Getenv("DATABASE_NAME"))
+	settings := types.DBSettings{
+		DatabaseUsername: os.Getenv("DATABASE_USERNAME"),
+		DatabasePassword: os.Getenv("DATABASE_PASSWORD"),
+		DatabaseNet:      os.Getenv("DATABASE_NET"),
+		DatabaseHost:     os.Getenv("DATABASE_HOST"),
+		DatabaseName:     os.Getenv("DATABASE_NAME"),
+	}
 
 	cfg := mysql.Config{
-		User:                 os.Getenv("DATABASE_USERNAME"),
-		Passwd:               os.Getenv("DATABASE_PASSWORD"),
-		Net:                  os.Getenv("DATABASE_NET"),
-		Addr:                 os.Getenv("DATABASE_HOST"),
-		DBName:               os.Getenv("DATABASE_NAME"),
+		User:                 settings.DatabaseUsername,
+		Passwd:               settings.DatabasePassword,
+		Net:                  settings.DatabaseNet,
+		Addr:                 settings.DatabaseHost,
+		DBName:               settings.DatabaseName,
 		AllowNativePasswords: true,
 	}
-	//fmt.Println("os.Getenv(\"DATABASE_USERNAME\") ----> ", os.Getenv("DATABASE_USERNAME"))
-	// Get a database handle.
+
 	var err error
 	db, err := sql.Open("mysql", cfg.FormatDSN())
 	if err != nil {

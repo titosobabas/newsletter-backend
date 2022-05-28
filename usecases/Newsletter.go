@@ -3,6 +3,7 @@ package usecases
 import (
 	"fmt"
 	"newsletter-backend/models"
+	"newsletter-backend/types"
 )
 
 type NewsletterUseCase struct {
@@ -17,6 +18,14 @@ func NewNewsletterUseCase(model models.NewsletterModel) *NewsletterUseCase {
 	code, _ := n.model.StoreData(email)
 	return code, nil
 }*/
+
+func (n *NewsletterUseCase) GetNewsletterEmails() ([]types.Newsletter, error) {
+	newsletterEmails, err := n.model.GetEmails()
+	if err != nil {
+		return nil, fmt.Errorf("an error ocurred: [%v]", err)
+	}
+	return newsletterEmails, nil
+}
 
 func (n *NewsletterUseCase) SaveNewsletter(email string) (int, error) {
 	_, err := n.model.EmailExists(email)

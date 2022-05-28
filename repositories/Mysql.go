@@ -3,6 +3,7 @@ package repositories
 import (
 	"database/sql"
 	"fmt"
+	"newsletter-backend/types"
 )
 
 type MysqlRepository struct {
@@ -11,6 +12,29 @@ type MysqlRepository struct {
 
 func NewMysqlRepository(db *sql.DB) *MysqlRepository {
 	return &MysqlRepository{db: db}
+}
+
+func (m *MysqlRepository) GetEmails() ([]types.Newsletter, error) {
+	// An albums slice to hold data from returned rows.
+	var newsletterEmails []types.Newsletter
+
+	rows, err := m.db.Query("SELECT email FROM newsletter_emails")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	// Loop through rows, using Scan to assign column data to struct fields.
+	for rows.Next() {
+		var newsletterEmail types.Newsletter
+		if err := rows.Scan(&newsletterEmail.EmailAddress); err != nil {
+			return nil, err
+		}
+		newsletterEmails = append(newsletterEmails, newsletterEmail)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return newsletterEmails, nil
 }
 
 func (m *MysqlRepository) EmailExists(email string) (int, error) {
