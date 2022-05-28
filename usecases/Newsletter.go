@@ -14,11 +14,6 @@ func NewNewsletterUseCase(model models.NewsletterModel) *NewsletterUseCase {
 	return &NewsletterUseCase{model: model}
 }
 
-/*func (n *NewsletterUseCase) EmailExistsAlready(email string) (int, error) {
-	code, _ := n.model.StoreData(email)
-	return code, nil
-}*/
-
 func (n *NewsletterUseCase) GetNewsletterEmails() ([]types.Newsletter, error) {
 	newsletterEmails, err := n.model.GetEmails()
 	if err != nil {
